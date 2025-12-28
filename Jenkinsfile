@@ -26,8 +26,19 @@ pipeline {
             steps {
                 echo 'Сборка Docker образа...'
                 script {
+                    if (isUnix()) {
+                        sh 'docker --version'
+                    } else {
+                        bat 'docker --version'
+                    }
+                    
                     def image = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                    image.tag("${DOCKER_IMAGE}:latest")
+                    
+                    if (isUnix()) {
+                        sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                    } else {
+                        bat "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                    }
                 }
             }
         }
@@ -84,6 +95,11 @@ pipeline {
             steps {
                 echo 'Отправка образа в Docker registry...'
                 script {
+                    // Раскомментируйте, если используете Docker registry
+                    // docker.withRegistry('https://your-registry.com') {
+                    //     docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    //     docker.image("${DOCKER_IMAGE}:latest").push()
+                    // }
                     echo "Образ ${DOCKER_IMAGE}:${DOCKER_TAG} готов к отправке в registry"
                 }
             }
@@ -110,4 +126,6 @@ pipeline {
         }
     }
 }
+
+
 
