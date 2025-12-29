@@ -1,4 +1,4 @@
-# Pomodoro Grand Prix - DevOps Assignment
+# Pomodoro Grand Prix
 
 ### Задание 1: CI/CD с Jenkins и Docker
 
